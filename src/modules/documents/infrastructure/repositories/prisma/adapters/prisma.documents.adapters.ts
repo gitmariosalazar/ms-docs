@@ -72,7 +72,7 @@ export class PrismaDocumentsAdapter {
           name: document.process.entity.name,
           email: document.process.entity.email,
           cellphone: document.process.entity.cellphone,
-          telephone: document.process.entity.telephone,
+          telephone: document.process.entity.telephone || '',
           address: document.process.entity.address,
           description: document.process.entity.description!,
           createdAt: document.process.entity.created_at,
