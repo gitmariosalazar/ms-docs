@@ -310,41 +310,6 @@ model ProcessReview {
   @@map("process_review")
 }
 
-model AccessTokenModel {
-  id_access_token     String        @id @default(uuid()) @map("id_access_token")
-  id_user             String        @map("id_user")
-  type_authentication String        @db.VarChar(50)
-  provider            String        @db.VarChar(50)
-  provider_account    String        @db.VarChar(50)
-  access_token        String        @db.Text
-  expires_at          Int
-  token_type          String        @db.VarChar(50)
-  scope               String        @db.VarChar(255)
-  token               String        @db.Text
-  created_at          DateTime      @default(now()) @map("created_at")
-  updated_at          DateTime      @updatedAt @map("updated_at")
-  user                User          @relation(fields: [id_user], references: [id_user])
-  revoke_tokens       RevokeToken[]
-
-  @@index([id_user])
-  @@map("access_token")
-}
-
-model RefreshTokenModel {
-  id_refresh_token String   @id @default(uuid()) @map("id_refresh_token")
-  id_user          String   @map("id_user")
-  refresh_token    String   @db.Text
-  revoked          Boolean  @default(false)
-  expires_at       DateTime
-  created_at       DateTime @default(now()) @map("created_at")
-  updated_at       DateTime @updatedAt @map("updated_at")
-  user             User     @relation(fields: [id_user], references: [id_user])
-
-  @@index([id_user])
-  @@index([refresh_token(length: 191)])
-  @@map("refresh_token")
-}
-
 model TelegramChat {
   id_telegram_chat Int      @id @default(autoincrement()) @map("id_telegram_chat")
   chat_id          String   @unique @db.VarChar(50)
@@ -382,16 +347,54 @@ model LogsNotifications {
   @@map("logs_notification")
 }
 
+model AccessTokenModel {
+  id_access_token     String              @id @default(uuid()) @map("id_access_token")
+  id_user             String              @map("id_user")
+  type_authentication String              @db.VarChar(50)
+  provider            String              @db.VarChar(50)
+  provider_account    String              @db.VarChar(255)
+  access_token        String              @db.Text
+  expires_at          DateTime
+  token_type          String              @db.VarChar(50)
+  scope               String              @db.VarChar(255)
+  created_at          DateTime            @default(now()) @map("created_at")
+  updated_at          DateTime            @updatedAt @map("updated_at")
+  user                User                @relation(fields: [id_user], references: [id_user])
+  revoke_tokens       RevokeToken[]
+  refresh_tokens      RefreshTokenModel[]
+
+  @@index([id_user])
+  @@map("access_token")
+}
+
+model RefreshTokenModel {
+  id_refresh_token String            @id @default(uuid()) @map("id_refresh_token")
+  id_user          String            @map("id_user")
+  id_access_token  String?           @map("id_access_token")
+  refresh_token    String            @db.VarChar(255)
+  revoked          Boolean           @default(false)
+  expires_at       DateTime
+  created_at       DateTime          @default(now()) @map("created_at")
+  updated_at       DateTime          @updatedAt @map("updated_at")
+  user             User              @relation(fields: [id_user], references: [id_user])
+  access_token     AccessTokenModel? @relation(fields: [id_access_token], references: [id_access_token])
+
+  @@index([id_user])
+  @@index([refresh_token])
+  @@index([id_access_token])
+  @@map("refresh_token")
+}
+
 model RevokeToken {
-  id_revoke_token String           @id @default(uuid()) @map("id_revoke_token")
-  jti             String           @unique @map("jti")
-  reason          String?          @db.VarChar(255)
-  id_user         String?          @map("id_user")
-  id_access_token String           @map("id_access_token")
-  created_at      DateTime         @default(now()) @map("created_at")
-  updated_at      DateTime         @updatedAt @map("updated_at")
-  access_token    AccessTokenModel @relation(fields: [id_access_token], references: [id_access_token])
-  user            User?            @relation(fields: [id_user], references: [id_user])
+  id_revoke_token String            @id @default(uuid()) @map("id_revoke_token")
+  jti             String            @map("jti") @db.VarChar(255)
+  reason          String?           @db.VarChar(255)
+  id_user         String?           @map("id_user")
+  id_access_token String?           @map("id_access_token")
+  created_at      DateTime          @default(now()) @map("created_at")
+  updated_at      DateTime          @updatedAt @map("updated_at")
+  user            User?             @relation(fields: [id_user], references: [id_user])
+  access_token    AccessTokenModel? @relation(fields: [id_access_token], references: [id_access_token])
 
   @@index([jti])
   @@index([id_user])
