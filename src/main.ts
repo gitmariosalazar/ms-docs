@@ -44,6 +44,6 @@ async function bootstrap() {
       },
     });
   await microservices.listen();
-  logger.log(`🚀🎉 The Documents microservice is listening to KAFKA...`);
+  logger.log(`🚀🎉 The Documents microservice is listening to KAFKA...✅`);
 }
 bootstrap();
