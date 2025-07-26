@@ -13,7 +13,7 @@ export interface DetailInvoiceResponse {
   description: string;
   emissionDate: Date;
   expirationDate: Date;
-  emailResponsability: string;
+  emailResponsibility: string;
   typePayment: TypePaymentResponse;
   document: DocumentsResponse;
   status: StatusResponse;

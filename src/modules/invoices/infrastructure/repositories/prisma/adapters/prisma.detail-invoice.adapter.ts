@@ -96,7 +96,7 @@ export class PrismaDetailInvoiceAdapter {
       description: detailInvoice.description!,
       emissionDate: detailInvoice.emission_date!,
       expirationDate: detailInvoice.expiration_date!,
-      emailResponsability: detailInvoice.email_responsibility!,
+      emailResponsibility: detailInvoice.email_responsibility!,
       typePayment: {
         idTypePayment: detailInvoice.pay_type.id_pay_type,
         name: detailInvoice.pay_type.name,
